@@ -2,7 +2,7 @@ const { nanoid } = require('nanoid');
 const notes = require('./notes');
 
 const addNoteHandler = (request, h) => {
-  const { title, tags, body } = request.payload;
+  const { title = 'untitled', tags, body } = request.payload;
 
   const id = nanoid(16);
   const createdAt = new Date().toISOString();
@@ -32,8 +32,7 @@ const addNoteHandler = (request, h) => {
     status: 'fail',
     message: 'Catatan gagal ditambahkan',
   });
-
-  response.code(500);
+  response.code(400);
   return response;
 };
 
@@ -68,6 +67,7 @@ const getNoteByIdHandler = (request, h) => {
 
 const editNoteByIdHandler = (request, h) => {
   const { id } = request.params;
+
   const { title, tags, body } = request.payload;
   const updatedAt = new Date().toISOString();
 
@@ -84,7 +84,7 @@ const editNoteByIdHandler = (request, h) => {
 
     const response = h.response({
       status: 'success',
-      message: 'Catatan berhasil diperbahrui',
+      message: 'Catatan berhasil diperbarui',
     });
     response.code(200);
     return response;
@@ -92,7 +92,7 @@ const editNoteByIdHandler = (request, h) => {
 
   const response = h.response({
     status: 'fail',
-    message: 'Gagal memperbahrui catatan. Id tidak ditemukan',
+    message: 'Gagal memperbarui catatan. Id tidak ditemukan',
   });
   response.code(404);
   return response;
